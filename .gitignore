@@ -1,0 +1,7 @@
+.env
+bot_logs.txt
+chat_history.db
+/data/
+/data/*.db
+/data/*.db
+/data/*.txt
