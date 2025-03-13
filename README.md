@@ -116,7 +116,8 @@ Use Deno to run the bot with the required permissions:
 
 - **Memory Optimization**: Summarizing older chat history to keep token costs low while maintaining context.
 - **Vector Database Support**: Implementing memory recall using Pinecone or similar for long-term knowledge retention.
-- **More LLM Providers**: Expanding support beyond OpenAI and Gemini (DeepSeek, Claude, etc.).
+- **More LLM Providers**: Expanding support beyond OpenAI and Gemini (Mistral, DeepSeek, Claude, etc..).
+- **Database Security Enhancements**: Implement encryption for chat history, restrict database access, and introduce an automated retention policy.
 
 ### Frameworks & APIs  
 - [grammY (Telegram Bot Framework)](https://github.com/grammyjs/grammY)  
