@@ -44,6 +44,9 @@ Built with **Deno**, it offers a lightweight, secure, and efficient alternative 
 - **LLM Providers:**\
   Integrates with OpenAI and Google Gemini for generating AI-powered responses.
 
+## Setting Up Your Telegram Bot  
+To create a new bot, follow the [Telegram BotFather guide](https://core.telegram.org/bots#botfather) to generate an API key.
+
 ## Setup & Installation
 
 1. **Clone the Repository:**
@@ -114,3 +117,14 @@ Use Deno to run the bot with the required permissions:
 - **Memory Optimization**: Summarizing older chat history to keep token costs low while maintaining context.
 - **Vector Database Support**: Implementing memory recall using Pinecone or similar for long-term knowledge retention.
 - **More LLM Providers**: Expanding support beyond OpenAI and Gemini (DeepSeek, Claude, etc.).
+
+### Frameworks & APIs  
+- [grammY (Telegram Bot Framework)](https://github.com/grammyjs/grammY)  
+- [Telegram Bot API Documentation](https://core.telegram.org/bots/api)  
+- [OpenAI API](https://platform.openai.com/docs/)  
+- [Google Gemini API](https://ai.google.dev)  
+
+## More Resources  
+- [Deno Documentation](https://deno.land/manual)  
+- [grammY Telegram Bot Framework](https://grammy.dev)  
+- [SQLite for Deno](https://deno.land/x/sqlite)  
