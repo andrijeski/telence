@@ -66,6 +66,7 @@ Create a .env file and define the following variables:
     LLM_PROVIDER=openai    # Supported providers: openai, gemini (more planned)
     MODEL_NAME=chatgpt-4o-latest
     CONTEXT_SIZE=10        # Adjustable context size (number of messages)
+    BOT_NAME=pjer_bot      # The name of the bot
 
 3. **Run the bot:**
 

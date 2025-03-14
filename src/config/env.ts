@@ -1,9 +1,16 @@
 import { config } from "https://deno.land/std@0.127.0/dotenv/mod.ts";
 
 // Load .env only if not in production
-const env = Deno.env.get("DENO_ENV") !== "production"
-  ? config().then((e) => e)
-  : Deno.env.toObject();
+// const env = Deno.env.get("DENO_ENV") !== "production"
+//   ? config().then((e) => e)
+//   : Deno.env.toObject();
+
+if (Deno.env.get("DENO_ENV") !== "production") {
+    const envConfig = await config();
+    for (const [key, value] of Object.entries(envConfig)) {
+      Deno.env.set(key, value);
+    }
+}
 
 export interface EnvConfig {
   TELEGRAM_BOT_TOKEN: string;
@@ -12,6 +19,7 @@ export interface EnvConfig {
   LLM_PROVIDER: string;
   MODEL_NAME: string;
   CONTEXT_SIZE: number;
+  BOT_NAME?: string;
 }
 
 // Validate and enforce required variables
@@ -38,8 +46,8 @@ function validateEnv(env: Record<string, string | undefined>): EnvConfig {
     LLM_PROVIDER: (env.LLM_PROVIDER?.trim().toLowerCase() || "openai"),
     MODEL_NAME: env.MODEL_NAME || "chatgpt-4o-latest",
     CONTEXT_SIZE: parseInt(env.CONTEXT_SIZE || "10"),
+    BOT_NAME: env.BOT_NAME || "Telence",
   };
 }
 
-// Since config() is async, we need to handle it properly
-export const configEnv = await env.then(validateEnv);
+export const configEnv = validateEnv(Deno.env.toObject());
