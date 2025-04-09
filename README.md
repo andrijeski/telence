@@ -68,7 +68,13 @@ Create a .env file and define the following variables:
     CONTEXT_SIZE=10        # Adjustable context size (number of messages)
     BOT_NAME=pjer_bot      # The name of the bot
 
-3. **Run the bot:**
+3.  **Create Data Directory:**
+
+The bot uses an SQLite database stored in the `data` directory. Create it before the first run:
+
+    mkdir data
+
+4.  **Run the bot:**
 
 Use Deno to run the bot with the required permissions:
 
@@ -129,4 +135,4 @@ Use Deno to run the bot with the required permissions:
 ## More Resources  
 - [Deno Documentation](https://deno.land/manual)  
 - [grammY Telegram Bot Framework](https://grammy.dev)  
-- [SQLite for Deno](https://deno.land/x/sqlite)  
+- [SQLite for Deno](https://deno.land/x/sqlite)

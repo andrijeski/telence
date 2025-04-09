@@ -20,6 +20,7 @@ export interface EnvConfig {
   MODEL_NAME: string;
   CONTEXT_SIZE: number;
   BOT_NAME?: string;
+  RELATIVE_TIME_THRESHOLD_SECONDS?: number; // Optional threshold in seconds
 }
 
 // Validate and enforce required variables
@@ -47,6 +48,9 @@ function validateEnv(env: Record<string, string | undefined>): EnvConfig {
     MODEL_NAME: env.MODEL_NAME || "chatgpt-4o-latest",
     CONTEXT_SIZE: parseInt(env.CONTEXT_SIZE || "10"),
     BOT_NAME: env.BOT_NAME || "Telence",
+    RELATIVE_TIME_THRESHOLD_SECONDS: parseInt(
+      env.RELATIVE_TIME_THRESHOLD_SECONDS || "7200", // Default to 2 hours (7200 seconds)
+    ),
   };
 }
 

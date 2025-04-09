@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext", "DOM", "deno"], // Added "deno"
     "module": "ESNext",
+    "moduleResolution": "Bundler", // Added moduleResolution
     "target": "ESNext",
     "strict": true,
+    "allowImportingTsExtensions": true, // Allow .ts extensions in imports
+    "noEmit": true, // Deno handles emitting, not tsc
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

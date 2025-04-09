@@ -1,7 +1,7 @@
 import { configEnv } from "../config/env.ts";
 import { logError, logInfo } from "../utils/logger.ts";
 
-interface ChatMessage {
+export interface ChatMessage { // Add export keyword
   role: "system" | "user" | "assistant";
   content: string;
 }
@@ -20,7 +20,7 @@ async function fetchWithRetry(
         throw new Error(`HTTP ${response.status}: ${await response.text()}`);
       }
       return response;
-    } catch (error) {
+    } catch (error: any) { // Add type annotation
       if (attempt === retries) {
         await logError(
           `fetchWithRetry failed after ${retries} attempts: ${error.message}`,
@@ -62,7 +62,7 @@ async function callLLMApi(
         "Error generating response.";
     }
     return "Unknown LLM provider response format.";
-  } catch (error) {
+  } catch (error: any) { // Add type annotation
     await logError(`callLLMApi error: ${error.message}`);
     return "I'm having trouble processing that request.";
   }

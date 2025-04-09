@@ -69,10 +69,10 @@ class Database {
     contextSize: number,
   ): Array<{ role: string; content: string; timestamp: string }> {
     try {
-      return this.db.query(
+      return this.db.query<[number, string, string, string]>( // Add type argument for query result
         "SELECT user_id, username, message, timestamp FROM messages WHERE chat_id = ? ORDER BY timestamp DESC LIMIT ?",
         [chatId, contextSize],
-      ).map((row) => {
+      ).map((row: [number, string, string, string]) => { // Add type annotation for row
         const userId = row[0];
         const username = row[1];
         const message = row[2];
@@ -86,6 +86,15 @@ class Database {
     } catch (error) {
       console.error("Error querying messages:", error);
       return [];
+    }
+  }
+
+  deleteMessages(chatId: number): void {
+    try {
+      this.db.query("DELETE FROM messages WHERE chat_id = ?", [chatId]);
+    } catch (error) {
+      console.error(`Error deleting messages for chat ${chatId}:`, error);
+      // Optionally re-throw or handle more gracefully
     }
   }
 
