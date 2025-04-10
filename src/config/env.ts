@@ -49,7 +49,7 @@ function validateEnv(env: Record<string, string | undefined>): EnvConfig {
     CONTEXT_SIZE: parseInt(env.CONTEXT_SIZE || "10"),
     BOT_NAME: env.BOT_NAME || "Telence",
     RELATIVE_TIME_THRESHOLD_SECONDS: parseInt(
-      env.RELATIVE_TIME_THRESHOLD_SECONDS || "7200", // Default to 2 hours (7200 seconds)
+      env.RELATIVE_TIME_THRESHOLD_SECONDS || "300", // Default to 5 minutes (300 seconds) for testing
     ),
   };
 }

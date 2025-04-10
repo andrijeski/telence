@@ -8,7 +8,7 @@ import { db } from "./database/db.ts";
 import { ChatMessage, fetchLLMResponse } from "./lib/providers.ts"; // Import ChatMessage
 import { logError, logInfo } from "./utils/logger.ts";
 import { handleSummaryCommand } from "./commands/commands.ts";
-import { formatRelativeTime, sendLongMessage } from "./utils/utils.ts"; // Import formatRelativeTime
+import { formatTimeGapSystemMessage, sendLongMessage } from "./utils/utils.ts"; // Use formatTimeGapSystemMessage
 
 const bot = new Bot<Context>(configEnv.TELEGRAM_BOT_TOKEN);
 bot.use(session());
@@ -82,29 +82,31 @@ bot.on("message:text", async (ctx: Context) => {
   // Retrieve raw history
   const rawHistory = db.queryMessages(chatId, configEnv.CONTEXT_SIZE);
 
-  // Process history to add relative timestamps conditionally
-  const processedHistory = rawHistory.reduce((acc, msg, index) => {
-    let content = msg.content;
+  // Process history to insert time gap system messages conditionally
+  const processedHistory: ChatMessage[] = [];
+  for (let i = 0; i < rawHistory.length; i++) {
+    const currentMsg = rawHistory[i];
     // Check if there's a previous message to compare with
-    if (index > 0) {
-      const prevMsg = rawHistory[index - 1];
-      const relativeTimeStr = formatRelativeTime(
+    if (i > 0) {
+      const prevMsg = rawHistory[i - 1];
+      const timeGapMessage = formatTimeGapSystemMessage(
         prevMsg.timestamp,
-        msg.timestamp,
+        currentMsg.timestamp,
         configEnv.RELATIVE_TIME_THRESHOLD_SECONDS!, // Use configured threshold
       );
-      if (relativeTimeStr) {
-        content = `${relativeTimeStr} ${content}`; // Prepend relative time if applicable
+      // If threshold met, insert the system message BEFORE the current message
+      if (timeGapMessage) {
+        processedHistory.push({ role: "system", content: timeGapMessage });
       }
     }
-    // Ensure the role from db.queryMessages aligns with ChatMessage roles
-    // The db query already maps userId === 0 to 'assistant' and others to 'user'
-    const role = msg.role as "user" | "assistant";
-    acc.push({ role: role, content: content });
-    return acc;
-  }, [] as ChatMessage[]); // Use ChatMessage[] for accumulator type
+    // Add the actual message (user or assistant)
+    processedHistory.push({
+      role: currentMsg.role as "user" | "assistant", // Cast role
+      content: currentMsg.content,
+    });
+  }
 
-  const systemPrompt: ChatMessage = { // Add type annotation for systemPrompt
+  const systemPrompt: ChatMessage = {
     role: "system",
     content: `You are ${configEnv.BOT_NAME}, a friendly and intelligent Telegram bot integrated into group and private chats. In group chats, you respond only when explicitly mentioned (e.g., '@${configEnv.BOT_NAME}'). You are powered by a PREMIUM large language model and have access to the last ${configEnv.CONTEXT_SIZE} messages of the conversation, including both user messages and your own previous responses. Use this context to generate helpful, accurate, and context-aware answers. **To ensure clarity and direct communication, always tag users by their Telegram username (e.g., @username) when referring to them in your responses.** Always keep the conversation natural and engaging, but keep it cool. Don't add timestamps to the messages unless you're asked to do so (they are for your reference only).`,
   };
