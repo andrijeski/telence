@@ -65,8 +65,9 @@ Create a .env file and define the following variables:
     GEMINI_API_KEY=your_gemini_api_key
     LLM_PROVIDER=openai    # Supported providers: openai, gemini (more planned)
     MODEL_NAME=chatgpt-4o-latest
-    CONTEXT_SIZE=10        # Adjustable context size (number of messages)
+    CONTEXT_SIZE=20        # Adjustable context size (number of messages)
     BOT_NAME=pjer_bot      # The name of the bot
+    RELATIVE_TIME_THRESHOLD_SECONDS=600   # Threshold for the system to add time indication in between messages, so the bot is aware when significant time has passed between the chat messages.
 
 3.  **Create Data Directory:**
 
