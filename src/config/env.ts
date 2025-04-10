@@ -21,6 +21,10 @@ export interface EnvConfig {
   CONTEXT_SIZE: number;
   BOT_NAME?: string;
   RELATIVE_TIME_THRESHOLD_SECONDS?: number;
+  GEMINI_ENABLE_GROUNDING?: boolean; // Flag to enable Gemini grounding
+  GOOGLE_PROJECT_ID?: string; // Required for Vertex AI endpoint
+  GOOGLE_LOCATION?: string; // Required for Vertex AI endpoint (e.g., us-central1)
+  GOOGLE_APPLICATION_CREDENTIALS?: string; // Path to service account key file for Vertex AI auth
 }
 
 // Validate and enforce required variables
@@ -40,6 +44,28 @@ function validateEnv(env: Record<string, string | undefined>): EnvConfig {
     );
   }
 
+  // Additional validation for Gemini provider using Vertex AI endpoint
+  const provider = (env.LLM_PROVIDER?.trim().toLowerCase() || "gemini");
+  if (provider === "gemini") {
+    if (!env.GOOGLE_PROJECT_ID) {
+      throw new Error(
+        "Missing GOOGLE_PROJECT_ID environment variable, required for Gemini (Vertex AI).",
+      );
+    }
+    if (!env.GOOGLE_LOCATION) {
+      throw new Error(
+        "Missing GOOGLE_LOCATION environment variable, required for Gemini (Vertex AI).",
+      );
+    }
+    // Service account key is needed for Vertex AI auth
+    if (!env.GOOGLE_APPLICATION_CREDENTIALS) {
+       throw new Error(
+        "Missing GOOGLE_APPLICATION_CREDENTIALS environment variable (path to service account key file), required for Gemini (Vertex AI).",
+      );
+    }
+  }
+
+
   return {
     TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN!,
     OPENAI_API_KEY: env.OPENAI_API_KEY,
@@ -51,6 +77,11 @@ function validateEnv(env: Record<string, string | undefined>): EnvConfig {
     RELATIVE_TIME_THRESHOLD_SECONDS: parseInt(
       env.RELATIVE_TIME_THRESHOLD_SECONDS || "600", // Default to 10 minutes (600 seconds)
     ),
+    GEMINI_ENABLE_GROUNDING: (env.GEMINI_ENABLE_GROUNDING || "false")
+      .toLowerCase() === "true", // Default to false
+    GOOGLE_PROJECT_ID: env.GOOGLE_PROJECT_ID, // Will be validated above if provider is gemini
+    GOOGLE_LOCATION: env.GOOGLE_LOCATION, // Will be validated above if provider is gemini
+    GOOGLE_APPLICATION_CREDENTIALS: env.GOOGLE_APPLICATION_CREDENTIALS, // Will be validated above if provider is gemini
   };
 }
 

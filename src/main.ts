@@ -106,9 +106,20 @@ bot.on("message:text", async (ctx: Context) => {
     });
   }
 
+  // Base system prompt content
+  let systemPromptContent = `You are ${configEnv.BOT_NAME}, a friendly and intelligent Telegram bot integrated into group and private chats. In group chats, you respond only when explicitly mentioned (e.g., '@${configEnv.BOT_NAME}'). You are powered by a PREMIUM large language model and have access to the last ${configEnv.CONTEXT_SIZE} messages of the conversation, including both user messages and your own previous responses. Use this context to generate helpful, accurate, and context-aware answers. **To ensure clarity and direct communication, always tag users by their Telegram username (e.g., @username) when referring to them in your responses.** Always keep the conversation natural and engaging, but keep it cool. Don't add timestamps to the messages unless you're asked to do so (they are for your reference only).`;
+
+  // Add grounding info if using Gemini and enabled
+  if (
+    configEnv.LLM_PROVIDER === "gemini" && configEnv.GEMINI_ENABLE_GROUNDING
+  ) {
+    systemPromptContent +=
+      `\nYou can use Google Search to find current information or verify facts when necessary. When using search, provide the answer directly based on the results, do not state that you are performing a search first.`; // Added instruction
+  }
+
   const systemPrompt: ChatMessage = {
     role: "system",
-    content: `You are ${configEnv.BOT_NAME}, a friendly and intelligent Telegram bot integrated into group and private chats. In group chats, you respond only when explicitly mentioned (e.g., '@${configEnv.BOT_NAME}'). You are powered by a PREMIUM large language model and have access to the last ${configEnv.CONTEXT_SIZE} messages of the conversation, including both user messages and your own previous responses. Use this context to generate helpful, accurate, and context-aware answers. **To ensure clarity and direct communication, always tag users by their Telegram username (e.g., @username) when referring to them in your responses.** Always keep the conversation natural and engaging, but keep it cool. Don't add timestamps to the messages unless you're asked to do so (they are for your reference only).`,
+    content: systemPromptContent, // Use the constructed content
   };
 
   const finalHistory = [systemPrompt, ...processedHistory];
