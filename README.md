@@ -122,6 +122,7 @@ Use Deno to run the bot with the required permissions:
 
 ## Planned Improvements
 
+- **Grounding**: Grounding or backing up some information using tools like google search. This is crucial for providing up to date information. See feature/grounding branch where a simple form of grounding is already implemented for Gemini 2.5 models.
 - **Memory Optimization**: Summarizing older chat history to keep token costs low while maintaining context.
 - **Vector Database Support**: Implementing memory recall using Pinecone or similar for long-term knowledge retention.
 - **More LLM Providers**: Expanding support beyond OpenAI and Gemini (Mistral, DeepSeek, Claude, etc..).
