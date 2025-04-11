@@ -135,7 +135,7 @@ async function fetchWithRetry(
         throw new Error(`HTTP ${response.status}: ${await response.text()}`);
       }
       return response;
-    } catch (error: any) { // Add type annotation
+    } catch (error: any) {
       if (attempt === retries) {
         await logError(
           `fetchWithRetry failed after ${retries} attempts: ${error.message}`,
@@ -182,7 +182,7 @@ async function callLLMApi(
         "Error generating response.";
     }
     return "Unknown LLM provider response format.";
-  } catch (error: any) { // Add type annotation
+  } catch (error: any) { 
     await logError(`callLLMApi error: ${error.message}`);
     return "I'm having trouble processing that request.";
   }
@@ -232,7 +232,7 @@ export async function fetchLLMResponse(
           "Authorization": `Bearer ${authToken}`,
           "Content-Type": "application/json",
         };
-      } catch (authError: any) { // Add type annotation
+      } catch (authError: any) {
         logError("Failed to get Google Auth Token", authError);
         return `Authentication Error: ${authError.message}`;
       }
@@ -253,10 +253,8 @@ export async function fetchLLMResponse(
       if (configEnv.GEMINI_ENABLE_GROUNDING) {
         logInfo("Gemini grounding enabled. Adding tools to request.");
         geminiBody.tools = [{
-          google_search: {} // Corrected structure based on API error and successful curl test
+          googleSearch: {} // This works for 2.5 models 
         }];
-        // Optional: Set temperature to 0.0 for potentially better grounding results
-        // geminiBody.generationConfig = { temperature: 0.0 };
       }
 
       body = geminiBody;

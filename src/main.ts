@@ -5,10 +5,10 @@ import {
 } from "https://deno.land/x/grammy@v1.20.0/mod.ts";
 import { configEnv } from "./config/env.ts";
 import { db } from "./database/db.ts";
-import { ChatMessage, fetchLLMResponse } from "./lib/providers.ts"; // Import ChatMessage
+import { ChatMessage, fetchLLMResponse } from "./lib/providers.ts";
 import { logError, logInfo } from "./utils/logger.ts";
 import { handleSummaryCommand } from "./commands/commands.ts";
-import { formatTimeGapSystemMessage, sendLongMessage } from "./utils/utils.ts"; // Use formatTimeGapSystemMessage
+import { formatTimeGapSystemMessage, sendLongMessage } from "./utils/utils.ts";
 
 const bot = new Bot<Context>(configEnv.TELEGRAM_BOT_TOKEN);
 bot.use(session());
@@ -114,7 +114,7 @@ bot.on("message:text", async (ctx: Context) => {
     configEnv.LLM_PROVIDER === "gemini" && configEnv.GEMINI_ENABLE_GROUNDING
   ) {
     systemPromptContent +=
-      `\nYou can use Google Search to find current information or verify facts when necessary. When using search, provide the answer directly based on the results, do not state that you are performing a search first.`; // Added instruction
+      `\nYou can use Google Search to find current information or verify facts when necessary. When using search, provide the answer directly based on the results, do not state that you are performing a search first. Actively use Google Search for questions about recent news, real-time information, specific statistics, or verifying potentially controversial facts.`; // Added instruction + query type guidance
   }
 
   const systemPrompt: ChatMessage = {
